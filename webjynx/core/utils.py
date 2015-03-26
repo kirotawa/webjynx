@@ -40,3 +40,16 @@ def get_commit_shas(path_file, path_repository):
 
     except _git.GitCommandError:
         return "error"
+
+
+def get_patch_file(git, sha):
+    return git.format_patch(-1, sha, '--stdout')
+
+
+def get_patch(sha, repository):
+    # We don't need to recheck once a sha comes from a real dir, git and file
+    try:
+        git = _git.cmd.Git(repository)
+        return get_patch_file(git, sha)
+    except _git.cmd.GitCommandError:
+        return "error"
