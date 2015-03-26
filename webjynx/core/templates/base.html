@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+	<title>Web Jynx</title>
+
+	<link href="{{ STATIC_URL }}css/bootstrap.min.css" rel="stylesheet">
+	<link href="{{ STATIC_URL }}css/blog-home.css" rel="stylesheet">
+	<link rel="stylesheet" href="{{ STATIC_URL }}/js/codemirror-5.1/lib/codemirror.css">
+
+	{% block headtags %}{% endblock %}
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+				<a class="navbar-brand" href="#">Web Jynx</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#">Add Repository</a>
+                    </li>
+                </ul>
+				<form name="data" class="navbar-form navbar-left">
+					<div class="form-group">
+						<select name="repos" class="form-control" id="repos" onchange="sethidden()">
+							{% for repo in repositories %}
+							<option value="{{ repo.pk }}">{{ repo.name }}</option>
+							{% endfor %}
+						</select>
+					</div>
+                 </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+				<form name="send_file" method="post" class="form-inline" action="">
+					<div class="form-group">
+						<input type="text" class="form-control" id="file" value="{{ file_ }}" name="file">
+						<input type="hidden" value="" id="repo_name" name="repo_pk">
+					</div>
+					<input class="btn btn-default" type="button" value="OK" id="sendfile">
+				</form>
+				<br>
+				<form name="data">
+					<select style="width: 100%" id="sha" name="commit_sha_list" size="36">
+						{% for sha in sha_list %}
+						<option value="{{ sha }}" onclick="postdata()">{{ sha }}</option>
+						{% endfor %}
+					</select>
+				</form>
+            </div>
+
+            <div class="col-md-8">
+				<textarea style="width: 100%" rows="33" name="code_patch" id="code_patch" readonly>{{ code_patch }}</textarea>
+            </div>
+        </div>
+        <hr>
+
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Web Jynx 2015</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- jQuery -->
+	<script src="{{ STATIC_URL }}/js/jquery.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+	<script src="{{ STATIC_URL }}/js/bootstrap.min.js"></script>
+
+	<script>
+
+		// When a sha commit is click we send all necessary data to
+		// server in order to handle and give back a proper answer
+		function postdata() {
+			var options = "";
+
+			for (var i = 0; i < $("#sha")[0].length; i++) {
+				options += " "+$("#sha")[0][i].value;
+			}
+
+			jQuery.post("/main", {'sha': $("#sha")[0].value,
+								  'file': $("#file")[0].value,
+								  'repository': $("#repos")[0].value,
+								  'shas': options,
+								  'csrfmiddlewaretoken': '{{ csrf_token }}'
+			},
+			function(response) {
+				$('body').html(response);
+			});
+		}
+
+		// When we entry a file and press ok we send this to the server
+		// bring us back with all log commit it has.
+		$("#sendfile").click( function () {
+			jQuery.post("/main", {'file': $("#file")[0].value,
+								  'repository': $("#repos")[0].value,
+								  'csrfmiddlewaretoken': '{{ csrf_token }}'
+			},
+			function(response) {
+				$('body').html(response);
+			});
+		});
+
+		var repo = "{{ repo_pk }}";
+
+		if (jQuery.isNumeric(repo))
+			$("#repos")[0].value = "{{ repo_pk }}";
+		else {
+			$("#repos").append("<option value=\"-1\">Repositories</option>");
+			$("#repos")[0].value = -1;
+		}
+		$("#file")[0].value = "{{ file_ }}";
+		$("#sha")[0].value = "{{ sha }}";
+
+	</script>
+
+	<script src="{{ STATIC_URL }}/js/codemirror-5.1/lib/codemirror.js"></script>
+	<script src="{{ STATIC_URL }}/js/codemirror-5.1/mode/diff/diff.js"></script>
+
+	<script>
+		// Magic happens here with codemirror in diff mode, the only we are interested in.
+		var editor = CodeMirror.fromTextArea($("#code_patch")[0], {
+		      lineNumbers: true,
+			  readOnly: true
+	  });
+	  editor.setSize("100%", 660);
+	</script>
+
+</body>
+
+</html>
