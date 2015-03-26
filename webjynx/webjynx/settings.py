@@ -24,6 +24,15 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
+# Template
+TEMPLATE_DIRS = (
+    '/templates',
+)
+
+STATICFILES_DIRS = []
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
 ALLOWED_HOSTS = []
 
 
@@ -36,6 +45,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'core',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -49,6 +59,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'webjynx.urls'
+
 
 WSGI_APPLICATION = 'webjynx.wsgi.application'
 
