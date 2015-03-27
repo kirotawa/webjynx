@@ -1,4 +1,3 @@
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.shortcuts import render
 from django.contrib import messages, auth
 from django.template import RequestContext
@@ -7,7 +6,6 @@ from core.utils import *
 from core.models import *
 
 
-@csrf_exempt
 def main(request):
     repositories = Repositories.objects.all()
     repo_pk = "Repositories"
