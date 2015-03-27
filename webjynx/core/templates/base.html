@@ -38,7 +38,7 @@
                 </ul>
 				<form name="data" class="navbar-form navbar-left">
 					<div class="form-group">
-						<select name="repos" class="form-control" id="repos" onchange="sethidden()">
+						<select name="repos" class="form-control" id="repos">
 							{% for repo in repositories %}
 							<option value="{{ repo.pk }}">{{ repo.name }}</option>
 							{% endfor %}
@@ -170,6 +170,12 @@
 			function(response) {
 				$('body').html(response);
 			});
+		});
+
+		$("#repos").change( function() {
+			$("#file")[0].value = "";
+			$("#sha").empty();
+			editor.setValue("");
 		});
 
 		var repo = "{{ repo_pk }}";
