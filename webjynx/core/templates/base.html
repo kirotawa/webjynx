@@ -181,10 +181,10 @@
 
 		var repo = "{{ repo_pk }}";
 
+		$("#repos").append("<option value=\"-1\">Repositories</option>");
 		if (jQuery.isNumeric(repo))
 			$("#repos")[0].value = "{{ repo_pk }}";
 		else {
-			$("#repos").append("<option value=\"-1\">Repositories</option>");
 			$("#repos")[0].value = -1;
 		}
 		$("#file")[0].value = "{{ file_ }}";
