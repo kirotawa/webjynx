@@ -14,9 +14,12 @@ def main(request):
     if request.method == "POST":
         if 'file' in request.POST.keys() and 'sha' not in request.POST.keys():
             file_ = request.POST['file']
-            repo_pk = request.POST['repository']
-            repository = get_object_or_404(Repositories, pk=repo_pk)
-            sha_list = get_commit_shas(file_, repository.path_name)
+            if 'repository' in request.POST.keys():
+                repo_pk = request.POST['repository']
+                repository = get_object_or_404(Repositories, pk=repo_pk)
+                sha_list = get_commit_shas(file_, repository.path_name)
+            else:
+                sha_list = ""
 
         elif 'sha' in request.POST.keys():
             sha_list = request.POST['shas'].split(' ')[1:]
