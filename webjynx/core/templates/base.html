@@ -89,7 +89,7 @@
 				<form name="data">
 					<select style="width: 100%" id="sha" name="commit_sha_list" size="36">
 						{% for sha in sha_list %}
-						<option value="{{ sha }}" onclick="postdata()">{{ sha }}</option>
+						<option value="{{ sha.0 }}" title="{{ sha.1 }}" onclick="postdata()">{{ sha.0 }}</option>
 						{% endfor %}
 					</select>
 				</form>

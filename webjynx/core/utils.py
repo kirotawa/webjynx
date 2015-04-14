@@ -2,7 +2,7 @@ import re
 import os
 import sys
 
-exp_reg = re.compile(r'commit [\w|d]{40}')
+exp_reg = re.compile(r'[\w|d]{40}')
 
 try:
     import git as _git
@@ -12,9 +12,17 @@ except ImportError:
 
 
 def log(git, file):
-    log_out = git.log(file)
-    sha_list = exp_reg.findall(log_out)
-    return [sha.split('commit ')[1] for sha in sha_list]
+    log = git.log('--pretty=oneline', file)
+    log_lines = log.split('\n')
+
+    sha_list = []
+    for line in log_lines:
+        sha = exp_reg.match(line)
+        sha = sha.group()
+        msg = line[41:]
+        sha_list.append([sha, msg])
+
+    return sha_list
 
 
 def get_commit_shas(path_file, path_repository):
