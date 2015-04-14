@@ -19,10 +19,16 @@ def main(request):
                 repository = get_object_or_404(Repositories, pk=repo_pk)
                 sha_list = get_commit_shas(file_, repository.path_name)
             else:
-                sha_list = ""
+                sha_list = [""]
 
         elif 'sha' in request.POST.keys():
-            sha_list = request.POST['shas'].split(' ')[1:]
+            shas = request.POST['shas'].split(' ')[1:]
+            msgs = request.POST['msg'].split('^$')[1:]
+            sha_list = []
+
+            for i, line in enumerate(shas):
+                sha_list.append([line, msgs[i]])
+
             file_ = request.POST['file']
             sha = request.POST['sha']
             repo_pk = request.POST['repository']

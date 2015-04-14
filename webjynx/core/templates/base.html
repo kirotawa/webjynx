@@ -122,15 +122,17 @@
 		// server in order to handle and give back a proper answer
 		function postdata() {
 			var options = "";
-
+			var msg = "";
 			for (var i = 0; i < $("#sha")[0].length; i++) {
 				options += " "+$("#sha")[0][i].value;
+				msg += "^$"+$("#sha")[0][i].title;
 			}
 
 			jQuery.post("/main", {'sha': $("#sha")[0].value,
 								  'file': $("#file")[0].value,
 								  'repository': $("#repos")[0].value,
 								  'shas': options,
+								  'msg': msg,
 								  'csrfmiddlewaretoken': '{{ csrf_token }}'
 			},
 			function(response) {
