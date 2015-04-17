@@ -95,7 +95,7 @@
 				</form>
             </div>
 
-            <div class="col-md-8">
+            <div class="col-md-8" id="codearea">
 				<textarea style="width: 100%" rows="33" name="code_patch" id="code_patch" readonly>{{ code_patch }}</textarea>
             </div>
         </div>
@@ -115,9 +115,9 @@
 	<script src="{{ STATIC_URL }}/js/jquery.js"></script>
     <!-- Bootstrap Core JavaScript -->
 	<script src="{{ STATIC_URL }}/js/bootstrap.min.js"></script>
-
+	<!-- oLoader plugin -->
+	<script src="{{ STATIC_URL }}/js/jquery.oLoader.min.js"></script>
 	<script>
-
 		// When a sha commit is click we send all necessary data to
 		// server in order to handle and give back a proper answer
 		function postdata() {
@@ -144,6 +144,15 @@
 		// When we entry a file and press ok we send this to the server
 		// bring us back with all log commit it has.
 		$("#sendfile").click( function () {
+			$('body').oLoader({
+				wholeWindow: true,
+				lockOverflow: true,
+				backgroundColor: '#000',
+				fadeInTime: 1000,
+				image:'{{ STATIC_URL }}/images/ownageLoader/loader4.gif',
+				fadeLEvel: 0.5
+			});
+
 			jQuery.post("/main", {'file': $("#file")[0].value,
 								  'repository': $("#repos")[0].value,
 								  'csrfmiddlewaretoken': '{{ csrf_token }}'
@@ -154,19 +163,6 @@
 		});
 
 		$("#addrepo").click( function () {
-			// we need to build all data in the page and pass it without pass all the vars.
-			/*var shalist = "";
-
-			for (var i = 0; i < $("#sha")[0].length; i++) {
-				shalist += " "+$("#sha")[0][i].value;
-			}
-
-			var repolist = "";
-
-			for (var i = 0; i < $("#repo")[0].length; i++) {
-				repolist += " "+$("#repo")[0][i].value;
-			}*/
-
 			jQuery.post("/addrepo", {'reponame': $("#repo-name")[0].value,
 									 'repopath': $("#repo-path")[0].value,
 								  	 'csrfmiddlewaretoken': '{{ csrf_token }}'
