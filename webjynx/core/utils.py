@@ -51,7 +51,7 @@ def get_commit_shas(path_file, path_repository):
 
 
 def get_patch_file(git, sha):
-    return git.format_patch(-1, sha, '--stdout')
+    return git.format_patch(-1, sha, '--stdout', stdout_as_string=False)
 
 
 def get_patch(sha, repository):

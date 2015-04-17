@@ -1,3 +1,4 @@
+#-*-  coding: utf-8 -*-
 from django.shortcuts import render
 from django.contrib import messages, auth
 from django.template import RequestContext
@@ -26,14 +27,17 @@ def main(request):
             msgs = request.POST['msg'].split('^$')[1:]
             sha_list = []
 
-            for i, line in enumerate(shas):
-                sha_list.append([line, msgs[i]])
+            for i, sha in enumerate(shas):
+                sha_list.append([sha, msgs[i]])
 
             file_ = request.POST['file']
-            sha = request.POST['sha']
+            sha_clicked = request.POST['sha']
             repo_pk = request.POST['repository']
             repository = get_object_or_404(Repositories, pk=repo_pk)
-            code_patch = get_patch(sha, repository.path_name)
+            code_patch = get_patch(sha_clicked, repository.path_name)
+
+            # TODO: find another way and delete this ugly workaround
+            code_patch = code_patch.decode('iso-8859-1')
 
     return render_to_response('base.html', locals(),
                               context_instance=RequestContext(request))
