@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load bootstrap %}
+{% block content %}
+
+
+<div class="container">
+    <form id="user_form" class="form-signin" name="LoginForm" action="/register/" method="post">
+		{% csrf_token %}
+		{{ user_form|bootstrap }}
+		<button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+    </form>
+
+</div> <!-- /container -->
+{% endblock %}
